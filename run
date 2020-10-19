@@ -9,4 +9,4 @@ cd app
 npm install
 cd ..
 
-docker-conpose up
+docker-compose up
