@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+cd api
+npm install
+cd ..
+
+cd app
+npm install
+cd ..
+
+docker-conpose up
