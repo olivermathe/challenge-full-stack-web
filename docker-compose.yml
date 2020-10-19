@@ -1,18 +1,34 @@
 version: '3.3'
 services:
+
+  app:
+    container_name: challenge-full-stack-web-app
+    image: "node:12"
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - ./app:/home/node/app
+    expose:
+      - "8080"
+    ports:
+      - 8080:8080
+    command: "npm run serve"
+    depends_on:
+      - api
+
   api:
     container_name: challenge-full-stack-web-api
     image: "node:12"
     user: "node"
     working_dir: /home/node/api
     volumes:
-      - ./:/home/node/api
+      - ./api:/home/node/api
     expose:
       - "3000"
     ports:
       - 3000:3000
     env_file:
-      - .env
+      - ./api/.env
     command: "npm start"
     depends_on:
       - db
