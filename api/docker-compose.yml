@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  api:
+    container_name: challenge-full-stack-web-api
+    image: "node:12"
+    user: "node"
+    working_dir: /home/node/api
+    volumes:
+      - ./:/home/node/api
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    command: "npm start"
+    depends_on:
+      - db
+
+  db:
+    container_name: challenge-full-stack-web-db
+    image: mysql:8.0.21
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'challenge-full-stack-web-db'
