@@ -1,7 +1,45 @@
 <template>
-  <div class="home">
+  <div class="home" data-app>
+    
+     <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Deletar estudante
+        </v-card-title>
+
+        <v-card-text>
+          Você tem certeza que deseja deletar este estudante?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="remove()"
+          >
+            Deletar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-container>
+
+      
+
 
       <v-row>
         <v-col
@@ -60,7 +98,10 @@
               <td>{{ item.ra }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.cpf }}</td>
-              <td>ACOES</td>
+              <td>
+                <v-btn text @click.stop="current = item; dialog = true;">excluir</v-btn>
+                <v-btn text @click="edit(item)">editar</v-btn>
+              </td>
             </tr>
           </tbody>
         </template>
@@ -68,8 +109,6 @@
 
     </v-container>
 
-
-    <img alt="Vue logo" src="../assets/logo.png">
   </div>
 </template>
 
@@ -82,6 +121,28 @@ export default {
     this.fetchData()
   },
   methods: {
+    async remove(item) {
+
+      this.dialog = false
+
+      if(!item) {
+        item = this.current
+      }
+
+      console.log(item)
+
+      const res = await fetch('http://localhost:3000/students/' + item.id, {
+        method: 'DELETE'
+      })
+      console.log(res)
+      if (res.ok) {
+        this.students = this.students.filter(student => student.id !== item.id)
+      }
+
+    },
+    edit(item) {
+      console.log(item)
+    },
     async fetchData() {
       const res = await fetch('http://localhost:3000/students');
       const data = await res.json();
@@ -91,6 +152,8 @@ export default {
   },
   data () {
       return {
+        current: null,
+        dialog: false,
         students: [
           {
             name: 'Frozen Yogurt',

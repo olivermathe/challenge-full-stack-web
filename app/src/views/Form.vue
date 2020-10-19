@@ -95,7 +95,7 @@
         this.$refs.form.validate()
       },
       reset () {
-        this.$refs.form.reset()
+        this.$router.push('/');
       },
       resetValidation () {
         this.$refs.form.resetValidation()
