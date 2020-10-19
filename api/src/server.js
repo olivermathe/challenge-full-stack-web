@@ -1,7 +1,8 @@
 class Server {
 
-    constructor({ express, studentsService }) {
+    constructor({ express, studentsService, cors }) {
         this.express = express
+        this.cors = cors
         this.app = express()
         this.studentsService = studentsService
     }
@@ -10,6 +11,7 @@ class Server {
 
         this.app.use(this.express.json()) // for parsing application/json
         this.app.use(this.express.urlencoded({ extended: true }))
+        this.app.use(this.cors())
 
         this.app.post('/students', this.studentsService.create())
         this.app.get('/students', this.studentsService.list())
