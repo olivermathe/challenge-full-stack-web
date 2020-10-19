@@ -44,7 +44,8 @@ class StudentsServices {
     update() {
         return async (req, res) => {
             try {
-                console.log(req.params)
+                delete req.body.cpf
+                delete req.body.ra
                 await this.studentModel.update(
                     req.body,
                     { where: { id: req.params.id } }

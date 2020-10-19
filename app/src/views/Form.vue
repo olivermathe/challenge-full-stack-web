@@ -20,6 +20,7 @@
     ></v-text-field>
 
     <v-text-field
+      :disabled="isUpdate"
       v-model="ra"
       :rules="raRules"
       label="Informe o registro academico"
@@ -27,6 +28,7 @@
     ></v-text-field>
 
     <v-text-field
+      :disabled="isUpdate"
       v-model="cpf"
       :rules="cpfRules"
       label="Informe o número do documento"
@@ -51,6 +53,7 @@
 <script>
   export default {
     data: () => ({
+      idUpdate: false,
       valid: true,
       name: '',
       nameRules: [
@@ -76,6 +79,8 @@
     }),
     async beforeMount() {
       if(this.$route.params.id) {
+
+        this.isUpdate = true
 
         const res = await fetch('http://localhost:3000/students/' + this.$route.params.id)
 
