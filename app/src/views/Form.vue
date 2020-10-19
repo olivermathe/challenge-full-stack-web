@@ -41,7 +41,7 @@
     </v-btn>
 
     <v-btn
-      @click="save"
+      @click="handleButtonClick"
     >
       Salvar
     </v-btn>
@@ -70,11 +70,52 @@
       cpf: '',
       cpfRules: [
         v => !!v || 'CPF obrigatório',
-        v => /[0-9]{11}/.test(v) || 'CPF deve ser válido',
+        v => /([0-9]){11}/.test(v) || 'CPF deve ser válido',
+        v => v.length === 11 || 'CPF deve ser válido'
       ],
     }),
+    async beforeMount() {
+      if(this.$route.params.id) {
 
+        const res = await fetch('http://localhost:3000/students/' + this.$route.params.id)
+
+        if (res.ok) {
+          const data = await res.json();
+          this.name = data.name
+          this.email = data.email
+          this.ra = data.ra
+          this.cpf = data.cpf
+        } else {
+          this.$router.push('/');
+        }
+
+      }
+    },
     methods: {
+      handleButtonClick() {
+
+        if(this.$route.params.id) {
+          return this.update()
+        } else {
+          return this.save()
+        }
+
+      },
+      async update() {
+        const res = await fetch('http://localhost:3000/students/' + this.$route.params.id, {
+          method: 'PUT',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: this.name,
+            email: this.email,
+            ra: parseInt(this.ra),
+            cpf: this.cpf
+          })
+        })
+        if (res.ok) {
+          this.$router.push('/');
+        }
+      },
       async save() {
         const res = await fetch('http://localhost:3000/students', {
           method: 'POST',
@@ -86,10 +127,9 @@
             cpf: this.cpf
           })
         })
-        console.log(res)
-        const json = await res.json()
-        console.log(json)
-        this.$router.push('/');
+        if (res.ok) {        
+          this.$router.push('/');
+        }
       },
       validate () {
         this.$refs.form.validate()

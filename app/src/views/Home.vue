@@ -37,10 +37,6 @@
     </v-dialog>
 
     <v-container>
-
-      
-
-
       <v-row>
         <v-col
           cols="12"
@@ -142,6 +138,7 @@ export default {
     },
     edit(item) {
       console.log(item)
+      this.$router.push('/form/' + item.id);
     },
     async fetchData() {
       const res = await fetch('http://localhost:3000/students');
